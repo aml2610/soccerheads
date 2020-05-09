@@ -1,4 +1,5 @@
 import numpy as np
+import random
 import ai_random
 
 
@@ -22,18 +23,18 @@ class QLearningAgent:
         self.gamma = GAMMA
 
     def get_next_move(self, current_state):
-        # if random.uniform(0, 1) < self.epsilon:
-        #     print("Playing random because of epsilon")
-        #     return ai_random.get_next_move()
-        # else:
-        possible_moves = self.q_table.get(current_state, None)
-        if possible_moves is None:
-            print("Playing random because of no knowledge")
+        if random.uniform(0, 1) < self.epsilon:
+            print("Playing random because of epsilon")
             return ai_random.get_next_move()
-        chosen_move = ACTION_INDEX_TO_MOVE[np.argmax(possible_moves)]
-        print("Playing according to knowledge")
-        # print("Knowledge is", possible_moves)
-        return chosen_move, ai_random.get_random_interval(chosen_move)
+        else:
+            possible_moves = self.q_table.get(current_state, None)
+            if possible_moves is None:
+                print("Playing random because of no knowledge")
+                return ai_random.get_next_move()
+            chosen_move = ACTION_INDEX_TO_MOVE[np.argmax(possible_moves)]
+            print("Playing according to knowledge")
+            # print("Knowledge is", possible_moves)
+            return chosen_move, ai_random.get_random_interval(chosen_move)
 
     def compute_q_value(self, old_state, action, new_state, reward):
         new_state_possible_moves = self.q_table.get(new_state, None)
