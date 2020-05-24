@@ -24,6 +24,11 @@ def apply_action(action):
     command(interval)
 
 
+def floor_coords_to_tens(coords):
+    (x, y) = coords
+    return x / 10 * 10, y / 10 * 10
+
+
 class SoccerHeadsEnvironment:
     def __init__(self):
         self.state = None
@@ -35,7 +40,7 @@ class SoccerHeadsEnvironment:
         ball_position = get_current_ball_position(screen_frame)
         # print("Ball position", ball_position)
         if ball_position is not None:
-            self.state = ball_position
+            self.state = floor_coords_to_tens(ball_position)
         else:
             self.refresh_state()
 

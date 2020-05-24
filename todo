@@ -5,9 +5,7 @@ how_close_i_was - how_close_i_am (the ball)
 + i should always be between my goal and the ball
 
 State:
-- split in 10x10 grids
 - my_position X ball_position
 
 Train:
 - train it a lot (overnight?)
-
