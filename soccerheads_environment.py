@@ -11,6 +11,10 @@ MOVE_TO_KEYBOARD_COMMAND = {
     "JUMP": jump,
     "KICK": kick
 }
+GOAL_SCORED_BUMP = 500
+GOAL_CONCEDED_BUMP = -500
+CORRECT_POSITION_BUMP = 50
+INCORRECT_POSITION_BUMP = -100
 
 
 def hash_state(state):
@@ -53,9 +57,12 @@ class SoccerHeadsEnvironment:
         return self.state, self.reward(old_state, self.state)
 
     def reward(self, old_state, new_state):
-        (x_old, y_old) = old_state
-        (x_new, y_new) = new_state
-        return -x_new + y_new
+        ((x_ball_old, y_ball_old), _) = old_state
+        ((x_ball_new, y_ball_new), (x_me_new, y_me_new)) = new_state
+        how_close_ball_has_moved_to_opponent_post = (-x_ball_new + y_ball_new) - (-x_ball_old + y_ball_old)
+        i_am_positioned_correctly = x_me_new - x_ball_new > 0
+        correct_position_bump = CORRECT_POSITION_BUMP if i_am_positioned_correctly else INCORRECT_POSITION_BUMP
+        return how_close_ball_has_moved_to_opponent_post + correct_position_bump
 
     def get_state(self):
         return self.state
