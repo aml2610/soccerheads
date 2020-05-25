@@ -2,10 +2,15 @@ import cv2
 import numpy as np
 
 
+# Ball detection params
 BLACK_PATCH_COLOUR_HSV = np.uint8([[[0, 100, 0]]])
 BLACK_PATCH_N_SIDES = 5
 BLACK_PATCH_AREA_LOWER_LIMIT = 50
 BLACK_PATCH_AREA_LOWER_HIGHER_LIMIT = 100
+
+# My player detection params
+MY_PLAYER_TEMPLATE = cv2.imread("resources/my_player_template.png", 0)
+MY_PLAYER_TEMPLATE_W, MY_PLAYER_TEMPLATE_H = MY_PLAYER_TEMPLATE.shape[::-1]
 
 
 def get_contour_n_sides(contour):
@@ -36,6 +41,21 @@ def get_current_ball_position(frame):
                 cY = int(M["m01"] / M["m00"])
                 centroids_found.append((cX, cY))
     if len(centroids_found):
+        # cv2.circle(frame, centroids_found[0], 10, (0, 255, 0), -1)
+        # cv2.imwrite("image1.png", frame)
         return centroids_found[0]
+    else:
+        return None
+
+
+def get_current_my_player_position(frame):
+    grayscale_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    res = cv2.matchTemplate(grayscale_frame, MY_PLAYER_TEMPLATE, cv2.TM_SQDIFF)
+    _, _, min_loc, _ = cv2.minMaxLoc(res)
+    if min_loc is not None:
+        centroid = (min_loc[0] + int(MY_PLAYER_TEMPLATE_W / 2), min_loc[1] + int(MY_PLAYER_TEMPLATE_H / 2))
+        # cv2.circle(frame, centroid, 10, (255, 255, 0), -1)
+        # cv2.imwrite("image2.png", frame)
+        return centroid
     else:
         return None

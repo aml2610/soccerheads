@@ -2,8 +2,5 @@ Reward function:
 + bump_if_goal_scored
 - bump_if_goal_conceded
 
-State:
-- my_position X ball_position
-
 Train:
 - train it a lot (overnight?)

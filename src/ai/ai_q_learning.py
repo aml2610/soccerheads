@@ -1,7 +1,6 @@
 import numpy as np
 import random
-import ai_random
-
+from src.ai import ai_random
 
 ALPHA = 0.1
 EPSILON = 0.2

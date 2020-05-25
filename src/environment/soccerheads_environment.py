@@ -1,7 +1,7 @@
 from time import sleep
-from screen_frame_grabber import grab_screen_frame
-from ball_tracker import get_current_ball_position
-from keyboard_adapter import move_left, move_right, jump, kick
+from src.screen.screen_frame_grabber import grab_screen_frame
+from src.ai.soccerheads_object_tracker import get_current_ball_position, get_current_my_player_position
+from src.keyboard.keyboard_adapter import move_left, move_right, jump, kick
 
 
 SCREEN_FRAME_BBOX = (520, 400, 1950, 1150)
@@ -18,8 +18,8 @@ INCORRECT_POSITION_BUMP = -100
 
 
 def hash_state(state):
-    (x, y) = state
-    return f"{x},{y}"
+    ((x_ball, y_ball), (x_me, y_me)) = state
+    return f"{x_ball},{y_ball};{x_me},{y_me}"
 
 
 def apply_action(action):
@@ -42,9 +42,11 @@ class SoccerHeadsEnvironment:
     def refresh_state(self):
         screen_frame = grab_screen_frame(SCREEN_FRAME_BBOX)
         ball_position = get_current_ball_position(screen_frame)
+        my_player_position = get_current_my_player_position(screen_frame)
         # print("Ball position", ball_position)
-        if ball_position is not None:
-            self.state = floor_coords_to_tens(ball_position)
+        # print("My player position", my_player_position)
+        if ball_position is not None and my_player_position is not None:
+            self.state = (floor_coords_to_tens(ball_position), floor_coords_to_tens(my_player_position))
         else:
             self.refresh_state()
 

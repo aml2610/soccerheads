@@ -1,7 +1,7 @@
 from time import sleep
-from keyboard_adapter import wait_for_space_press, start_listening_for_s_press, stop_listening_for_s_press
-from ai_q_learning import QLearningAgent
-from soccerheads_environment import SoccerHeadsEnvironment, hash_state
+from src.keyboard.keyboard_adapter import wait_for_space_press, start_listening_for_s_press, stop_listening_for_s_press
+from src.ai.ai_q_learning import QLearningAgent
+from src.environment.soccerheads_environment import SoccerHeadsEnvironment, hash_state
 
 
 MOVE_TO_ACTION_INDEX = {
@@ -28,6 +28,7 @@ def play():
     env = SoccerHeadsEnvironment()
     agent = QLearningAgent(env.get_n_actions())
     while not stopped:
+        env.refresh_state()
         current_state = env.get_state()
         if current_state == (706, 299):
             sleep(0.5)
